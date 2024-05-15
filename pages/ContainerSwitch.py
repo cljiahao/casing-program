@@ -44,6 +44,9 @@ class ContainerSwitch(Toplevel):
                             message="Is Container Empty?",
                         ):
                             set_empty_cont(input)
+                        else:
+                            self.reset(self.new_entry)
+                            return False
                     else:
                         error = "Container ID not found in system."
 

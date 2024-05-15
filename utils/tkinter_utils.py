@@ -65,6 +65,10 @@ def cont_id(wos_entry, response, input, containers):
                 message="Is Container Empty?",
             ):
                 set_empty_cont(input)
+            else:
+                wos_entry["contid"].after_idle(lambda: clear_value(wos_entry["contid"]))
+                wos_entry["contid"].focus()
+                return
         else:
             error = "Container ID not found in system."
 
