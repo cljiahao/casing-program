@@ -11,6 +11,7 @@ from pages.ContainerSwitch import ContainerSwitch
 from pages.Login import Login
 from utils.read_write import read_json, write_dat, write_json
 from utils.tkinter_utils import opt_code, cont_id, lot_no, reel_id
+from utils.logger_config import logger
 
 
 class ContainerScan(Tk):
@@ -108,9 +109,10 @@ class ContainerScan(Tk):
         cont_id_gui(self.cont_frame, self.containers[lot_no])
 
     def end_lot(self):
-        lot_no = self.wos_entry["lotNo"].get()
+        lot_no = self.wos_entry["lotNo"].get()          
 
         if lot_no not in self.containers:
+            logger.info(f"Lot number {lot_no} not found in containers.")
             return
 
         contids = self.containers[lot_no]
@@ -130,6 +132,7 @@ class ContainerScan(Tk):
         res = complete_lot(self.response)
         if res["code"] != "0":
             messagebox.showinfo(title="Error for Lot End", message=res["message"])
+            logger.error(f"Error ending lot {lot_no}: {res['message']}")
             return
         for contid in self.containers[lot_no]:
             set_empty_cont(contid)
@@ -139,6 +142,7 @@ class ContainerScan(Tk):
         #     update_cont(dat_path)
 
         messagebox.showinfo(title="Lot Ended", message="Lot ended successfully.")
+        logger.info(f"Lot ended successfully: {lot_no}")
         del self.containers[lot_no]
         write_json("./config/json/containers.json", self.containers)
         self.reset()
